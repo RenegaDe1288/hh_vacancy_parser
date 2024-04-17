@@ -1,4 +1,5 @@
-from pywebio import input, output, start_server
+from pywebio import input, output
+from pywebio.input import select
 import requests
 
 import re
@@ -6,7 +7,16 @@ import time
 from collections import Counter
 
 from create_xls import crete_xls
-from words import WORDS, MISSED_VACANCY, VACANCY_URL, SEARCH_VACANCY_URL
+
+from words import (
+    WORDS,
+    MISSED_VACANCY,
+    VACANCY_URL,
+    SEARCH_VACANCY_URL,
+    EXPERIENCE,
+    SCHEDULE,
+    AREA,
+)
 
 
 def get_dict(filtered_skills: dict, statistic_skills: dict) -> dict:
@@ -97,22 +107,28 @@ def get_vacancy_data(vacancy_id, words: set, statistic_skills:dict) -> set:
         return vacancy_data, statistic_skills
 
 
-def get_vacancies(keyword):
+def get_vacancies(keyword, exp, sched, area):
     global MISSED_VACANCY
     url = SEARCH_VACANCY_URL
     page = 0
     statistic_skills = {}
     all_vacances = 0
     big_data = []
-    while all_vacances < 50:
+    while all_vacances < 2000:
         time.sleep(1)
         params = {
             "text": keyword,
-            "area": 1,  # Specify the desired area ID (1 is Moscow)
-            "per_page": 50,  # Number of vacancies per page
+            "per_page": 50,
             "page": page,
             "search_field": "name",
         }
+        if exp != "Empty":
+            params["experience"] = exp
+        if sched != "Empty":
+            params["schedule"] = sched
+        if area != "Empty":
+            params["area"] = area
+        
         headers = {
             "User-Agent": "Your User Agent",
         }
@@ -177,13 +193,18 @@ def get_vacancies(keyword):
 
 
 def search_vacancies():
+    experince =[i for i in EXPERIENCE.keys()]
+    schedule =[i for i in SCHEDULE.keys()] 
+    area =[i for i in AREA.keys()]
     keyword = input.input("Укажите название вакансии:", type=input.TEXT)
+    exp = select("Выберите опыт работы", options=experince)
+    sched = select("Выберите опыт работы", options=schedule)
+    area = select("Выберите опыт работы", options=area)
+    exp = EXPERIENCE[exp]
+    sched =SCHEDULE[sched]
+    area = AREA[area]
     output.clear()
     output.put_text("Поиск вакансий...")
-    get_vacancies(keyword)
-
-
-# if __name__ == '__main__':
-#     start_server(search_vacancies, port=8080)
+    get_vacancies(keyword, exp, sched, area)
 
 

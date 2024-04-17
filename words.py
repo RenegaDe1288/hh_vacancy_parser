@@ -4,6 +4,28 @@ SEARCH_VACANCY_URL = "https://api.hh.ru/vacancies"
 
 MISSED_VACANCY = []
 
+EXPERIENCE = {
+    "Не имеет значения" : "Empty",
+    "Без опыта": "noExperience",
+    "От 1 до 3 лет" : "between1And3",
+    "От 3 до 6 лет" : "between3And6",
+    "Более 6 лет" : "moreThan6",
+}
+
+SCHEDULE = {
+"Любой" : "Empty",
+"Удаленная работа" : "remote",
+"Сменный график" : "shift",
+"Гибкий график" : "flexible ",
+"Полный день" : "fullDay",
+}
+
+AREA = {
+"Москва" : "1",
+"Санкт-Петербург" : "2",
+"Вся Россия" : "Empty",
+}
+
 WORDS = [
     "Selenium",
     "Typescript",
